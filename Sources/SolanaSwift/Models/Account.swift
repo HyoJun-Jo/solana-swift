@@ -61,6 +61,16 @@ public extension SolanaSDK {
             }
         }
         
+        public init(seed: String, network: Network, derivablePath: DerivablePath? = nil) throws {
+            let keys = try Ed25519HDKey.derivePath(derivablePath!.rawValue, seed: seed).get()
+            let keyPair = try NaclSign.KeyPair.keyPair(fromSeed: keys.key)
+            let newKey = try PublicKey(data: keyPair.publicKey)
+            self.publicKey = newKey
+            self.secretKey = keyPair.secretKey
+            let phrase = try Mnemonic.toMnemonic(secretKey.bytes)
+            self.phrase = phrase
+        }
+        
         public init(secretKey: Data) throws {
             let keys = try NaclSign.KeyPair.keyPair(fromSecretKey: secretKey)
             self.publicKey = try PublicKey(data: keys.publicKey)
