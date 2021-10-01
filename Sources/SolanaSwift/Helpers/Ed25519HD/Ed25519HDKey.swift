@@ -49,14 +49,7 @@ public struct Ed25519HDKey {
 
     public static func derivePath(_ path: Path?, seed: Hex, offSet: Int = hardenedOffset) -> Result<Keys, Error> {
         guard let path = path else {
-            return getMasterKeyFromSeed(seed).flatMap { (keys: Keys) in
-                do {
-                    let keys = try CKDPriv(keys: keys, index: 0).get()
-                    return .success(keys)
-                } catch {
-                    return .failure(.canNotGetMasterKeyFromSeed)
-                }
-            }
+            return getMasterKeyFromSeed(seed)
         }
         
         guard path.isValidDerivationPath else {
@@ -69,9 +62,6 @@ public struct Ed25519HDKey {
                 .map {Int($0)!}
             return .success((keys:keys, segments: segments))
         }.flatMap { (keys: Keys, segments: [Int]) in
-            for segment in segments {
-                print("segment: \(segment)")
-            }
             do {
                 let keys = try segments.reduce(keys, { try CKDPriv(keys: $0, index: UInt32($1+offSet)).get() })
                 return .success(keys)
