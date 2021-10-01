@@ -62,7 +62,11 @@ public extension SolanaSDK {
         }
         
         public init(seed: String, network: Network, derivablePath: DerivablePath? = nil) throws {
-            let keys = try Ed25519HDKey.derivePath(derivablePath!.rawValue, seed: seed).get()
+            var pathRaw: String?
+            if let path = derivablePath {
+                pathRaw = path.rawValue
+            }
+            let keys = try Ed25519HDKey.derivePath(pathRaw, seed: seed).get()
             let keyPair = try NaclSign.KeyPair.keyPair(fromSeed: keys.key)
             let newKey = try PublicKey(data: keyPair.publicKey)
             self.publicKey = newKey

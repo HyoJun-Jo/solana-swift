@@ -47,7 +47,11 @@ public struct Ed25519HDKey {
         return withZeroBytes ? Data(zero + signPk): Data(signPk)
     }
 
-    public static func derivePath(_ path: Path, seed: Hex, offSet: Int = hardenedOffset) -> Result<Keys, Error> {
+    public static func derivePath(_ path: Path?, seed: Hex, offSet: Int = hardenedOffset) -> Result<Keys, Error> {
+        guard let path = path else {
+            return getMasterKeyFromSeed(seed)
+        }
+        
         guard path.isValidDerivationPath else {
             return .failure(Error.invalidDerivationPath)
         }
