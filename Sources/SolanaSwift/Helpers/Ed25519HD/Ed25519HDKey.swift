@@ -69,6 +69,9 @@ public struct Ed25519HDKey {
                 .map {Int($0)!}
             return .success((keys:keys, segments: segments))
         }.flatMap { (keys: Keys, segments: [Int]) in
+            for segment in segments {
+                print("segment: \(segment)")
+            }
             do {
                 let keys = try segments.reduce(keys, { try CKDPriv(keys: $0, index: UInt32($1+offSet)).get() })
                 return .success(keys)
