@@ -75,7 +75,7 @@ public extension SolanaSDK {
             self.phrase = phrase
         }
         
-        public init(keyPoint: Data, network: Network) {
+        public init(keyPoint: Data, network: Network) throws {
             let keyPair = try NaclSign.KeyPair.keyPair(fromSeed: keyPoint)
             let newKey = try PublicKey(data: keyPair.publicKey)
             self.publicKey = newKey
