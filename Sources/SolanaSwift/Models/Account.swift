@@ -67,6 +67,7 @@ public extension SolanaSDK {
                 pathRaw = path.rawValue
             }
             let keys = try Ed25519HDKey.derivePath(pathRaw, seed: seed).get()
+            print(">>> keys: \(keys.key.toHexString())")
             let keyPair = try NaclSign.KeyPair.keyPair(fromSeed: keys.key)
             let newKey = try PublicKey(data: keyPair.publicKey)
             self.publicKey = newKey
@@ -76,6 +77,7 @@ public extension SolanaSDK {
         }
         
         public init(keyPoint: Data, network: Network) throws {
+            print(">>> keyPoint: \(keyPoint.toHexString())")
             let keyPair = try NaclSign.KeyPair.keyPair(fromSeed: keyPoint)
             let newKey = try PublicKey(data: keyPair.publicKey)
             self.publicKey = newKey
