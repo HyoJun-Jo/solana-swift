@@ -34,31 +34,31 @@ public extension SolanaSDK {
             
             var derivablePath = derivablePath
             if derivablePath == nil {
-                if phrase.count == 12 {
-                    derivablePath = .init(type: .deprecated, walletIndex: 0, accountIndex: 0)
-                } else {
+//                if phrase.count == 12 {
+//                    derivablePath = .init(type: .deprecated, walletIndex: 0, accountIndex: 0)
+//                } else {
                     derivablePath = .default
-                }
+//                }
             }
             
-            switch derivablePath!.type {
-            case .deprecated:
-                let keychain = try Keychain(seedString: phrase.joined(separator: " "), network: network.cluster)
-                guard let seed = try keychain?.derivedKeychain(at: derivablePath!.rawValue).privateKey else {
-                    throw Error.other("Could not derivate private key")
-                }
-                
-                let keys = try NaclSign.KeyPair.keyPair(fromSeed: seed)
-                
-                self.publicKey = try PublicKey(data: keys.publicKey)
-                self.secretKey = keys.secretKey
-            default:
+//            switch derivablePath!.type {
+//            case .deprecated:
+//                let keychain = try Keychain(seedString: phrase.joined(separator: " "), network: network.cluster)
+//                guard let seed = try keychain?.derivedKeychain(at: derivablePath!.rawValue).privateKey else {
+//                    throw Error.other("Could not derivate private key")
+//                }
+//
+//                let keys = try NaclSign.KeyPair.keyPair(fromSeed: seed)
+//
+//                self.publicKey = try PublicKey(data: keys.publicKey)
+//                self.secretKey = keys.secretKey
+//            default:
                 let keys = try Ed25519HDKey.derivePath(derivablePath!.rawValue, seed: mnemonic.seed.toHexString()).get()
                 let keyPair = try NaclSign.KeyPair.keyPair(fromSeed: keys.key)
                 let newKey = try PublicKey(data: keyPair.publicKey)
                 self.publicKey = newKey
                 self.secretKey = keyPair.secretKey
-            }
+//            }
         }
         
         public init(seed: String, network: Network, derivablePath: DerivablePath? = nil) throws {

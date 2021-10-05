@@ -11,50 +11,57 @@ extension SolanaSDK {
     public struct DerivablePath: Hashable, Codable {
         // MARK: - Nested type
         public enum DerivableType: String, CaseIterable, Codable {
-            case bip44Change
             case bip44
-            case deprecated
+            case bip44Account
+            case bip44Change
+//            case deprecated
             
-            var prefix: String {
-                switch self {
-                case .deprecated:
-                    return "m/501'"
-                case .bip44, .bip44Change:
-                    return "m/44'/501'"
-                }
-            }
+//            var prefix: String {
+//                switch self {
+//                case .deprecated:
+//                    return "m/501'"
+//                    case
+//
+//                case .bip44, .bip44Change:
+//                    return "m/44'/501'"
+//                }
+//            }
         }
         
         // MARK: - Properties
         public let type: DerivableType
-        public let walletIndex: Int
-        public let accountIndex: Int?
+        public let account: Int?
+        public let change: Int?
         
-        public init(type: SolanaSDK.DerivablePath.DerivableType, walletIndex: Int, accountIndex: Int? = nil) {
+        
+        public init(type: SolanaSDK.DerivablePath.DerivableType, account: Int? = nil, change: Int? = nil) {
             self.type = type
-            self.walletIndex = walletIndex
-            self.accountIndex = accountIndex
+            self.account = account
+            self.change = change
         }
         
         public static var `default`: Self {
             .init(
                 type: .bip44Change,
-                walletIndex: 0,
-                accountIndex: 0
+                account: 0,
+                change: 0
             )
         }
         
         public var rawValue: String {
-            var value = type.prefix
+//            var value = type.prefix
             switch type {
-            case .deprecated:
-                value += "/\(walletIndex)'/0/\(accountIndex ?? 0)"
+//            case .deprecated:
+//                value += "/\(change)'/0/\(account ?? 0)"
             case .bip44:
-                value += "/\(walletIndex)'"
+//                value += "/\(walletIndex)'"
+                return "m"
+            case .bip44Account:
+                return "m/44'/501'/\(account ?? 0)'"
             case .bip44Change:
-                value += "/\(walletIndex)'/0'"
+//                value += "/\(walletIndex)'/0'"
+                return "m/44'/501'/\(account ?? 0)'/\(change ?? 0)'"
             }
-            return value
         }
     }
 }
