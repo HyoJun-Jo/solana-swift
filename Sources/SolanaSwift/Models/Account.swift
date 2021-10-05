@@ -75,6 +75,15 @@ public extension SolanaSDK {
             self.phrase = phrase
         }
         
+        public init(keyPoint: Data, network: Network) {
+            let keyPair = try NaclSign.KeyPair.keyPair(fromSeed: keyPoint)
+            let newKey = try PublicKey(data: keyPair.publicKey)
+            self.publicKey = newKey
+            self.secretKey = keyPair.secretKey
+            let phrase = try Mnemonic.toMnemonic(secretKey.bytes)
+            self.phrase = phrase
+        }
+        
         public init(secretKey: Data) throws {
             let keys = try NaclSign.KeyPair.keyPair(fromSecretKey: secretKey)
             self.publicKey = try PublicKey(data: keys.publicKey)
