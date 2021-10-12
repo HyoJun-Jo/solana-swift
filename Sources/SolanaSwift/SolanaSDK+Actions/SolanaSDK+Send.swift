@@ -31,9 +31,9 @@ extension SolanaSDK {
         do {
             let fromPublicKey = account.publicKey
             
-            if fromPublicKey.base58EncodedString == destination {
-                throw Error.other("You can not send tokens to yourself")
-            }
+//            if fromPublicKey.base58EncodedString == destination {
+//                throw Error.other("You can not send tokens to yourself")
+//            }
             
             // check
             return getAccountInfo(account: destination, decodedTo: EmptyInfo.self)
