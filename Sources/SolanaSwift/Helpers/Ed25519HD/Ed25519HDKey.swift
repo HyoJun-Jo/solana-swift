@@ -12,7 +12,7 @@ public struct Ed25519HDKey {
     }
 
     private static let ed25519Curve = "ed25519 seed"
-    public static let hardenedOffset = 0x80000000
+    public static let hardenedOffset = 0x80000000 as UInt32
 
     public static func getMasterKeyFromSeed(_ seed: Hex) -> Result<Keys, Error> {
         let hmacKey = ed25519Curve.bytes
@@ -47,7 +47,7 @@ public struct Ed25519HDKey {
         return withZeroBytes ? Data(zero + signPk): Data(signPk)
     }
 
-    public static func derivePath(_ path: Path?, seed: Hex, offSet: UInt32 = UInt32(hardenedOffset)) -> Result<Keys, Error> {
+    public static func derivePath(_ path: Path?, seed: Hex, offSet: UInt32 = hardenedOffset) -> Result<Keys, Error> {
         guard let path = path else {
             return getMasterKeyFromSeed(seed)
         }
