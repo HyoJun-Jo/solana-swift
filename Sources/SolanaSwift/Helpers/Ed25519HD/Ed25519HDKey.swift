@@ -47,7 +47,7 @@ public struct Ed25519HDKey {
         return withZeroBytes ? Data(zero + signPk): Data(signPk)
     }
 
-    public static func derivePath(_ path: Path?, seed: Hex, offSet: Int = hardenedOffset) -> Result<Keys, Error> {
+    public static func derivePath(_ path: Path?, seed: Hex, offSet: UInt32 = UInt32(hardenedOffset)) -> Result<Keys, Error> {
         guard let path = path else {
             return getMasterKeyFromSeed(seed)
         }
@@ -59,11 +59,11 @@ public struct Ed25519HDKey {
         return getMasterKeyFromSeed(seed).flatMap { keys in
             let segments = path.components(separatedBy: "/")[1...]
                 .map {$0.replacingDerive}
-                .map {Int($0)!}
+                .map {UInt32($0)!}
             return .success((keys:keys, segments: segments))
-        }.flatMap { (keys: Keys, segments: [Int]) in
+        }.flatMap { (keys: Keys, segments: [UInt32]) in
             do {
-                let keys = try segments.reduce(keys, { try CKDPriv(keys: $0, index: UInt32($1+offSet)).get() })
+                let keys = try segments.reduce(keys, { try CKDPriv(keys: $0, index: $1+offSet).get() })
                 return .success(keys)
             } catch {
                 return .failure(.canNotGetMasterKeyFromSeed)
