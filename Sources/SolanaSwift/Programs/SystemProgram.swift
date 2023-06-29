@@ -9,7 +9,7 @@ import Foundation
 
 public extension SolanaSDK {
     struct SystemProgram {
-        private struct Index {
+        struct Index {
             static let create: UInt32 = 0
             static let transfer: UInt32 = 2
         }
