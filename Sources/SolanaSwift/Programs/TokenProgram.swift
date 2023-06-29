@@ -10,7 +10,7 @@ import Foundation
 public extension SolanaSDK {
     struct TokenProgram {
         // MARK: - Nested type
-        struct Index {
+        public struct Index {
             static let initalizeMint: UInt8 = 0
             static let initializeAccount: UInt8 = 1
             static let transfer: UInt8 = 3
