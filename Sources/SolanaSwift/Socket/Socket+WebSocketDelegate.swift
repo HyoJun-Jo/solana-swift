@@ -9,44 +9,25 @@ import Foundation
 import Starscream
 
 extension SolanaSDK.Socket: WebSocketDelegate {
-    public func didReceive(event: WebSocketEvent, client: WebSocket) {
-        switch event {
-        case .connected(let headers):
-            Logger.log(message: "websocket is connected: \(headers)", event: .event)
-            status.accept(.connected)
-            onOpen()
-        case .disconnected(let reason, let code):
-            Logger.log(message: "websocket is disconnected: \(reason) with code: \(code)", event: .event)
-            status.accept(.disconnected)
-            onClose(Int(code))
-            socket.connect()
-        case .text(let string):
-            Logger.log(message: "Received text: \(string)", event: .event)
-            if let data = string.data(using: .utf8) {
-                dataSubject.onNext(data)
-            }
-        case .binary(let data):
-            Logger.log(message: "Received data: \(data.count)", event: .event)
-        case .ping(_):
-//            Logger.log(message: "Socket ping", event: .event)
-            break
-        case .pong(_):
-//            Logger.log(message: "Socket pong", event: .event)
-            break
-        case .viabilityChanged(_):
-            break
-        case .reconnectSuggested(let bool):
-            Logger.log(message: "reconnectSuggested \(bool)", event: .event)
-            if bool { socket.connect() }
-        case .cancelled:
-            status.accept(.disconnected)
-        case .error(let error):
-            if let error = error {
-                onError(SolanaSDK.Error.socket(error))
-            }
-            // reconnect
-            socket.connect()
+    public func websocketDidConnect(socket: Starscream.WebSocketClient) {
+        status.accept(.connected)
+        onOpen()
+    }
+    
+    public func websocketDidDisconnect(socket: Starscream.WebSocketClient, error: Error?) {
+        status.accept(.disconnected)
+        onClose(0)
+        socket.connect()
+    }
+    
+    public func websocketDidReceiveMessage(socket: Starscream.WebSocketClient, text: String) {
+        if let data = text.data(using: .utf8) {
+            dataSubject.onNext(data)
         }
+    }
+    
+    public func websocketDidReceiveData(socket: Starscream.WebSocketClient, data: Data) {
+        dataSubject.onNext(data)
     }
     
     // MARK: - Handlers
