@@ -10,8 +10,8 @@ import Foundation
 public extension SolanaSDK {
     struct SystemProgram {
         public struct Index {
-            static let create: UInt32 = 0
-            static let transfer: UInt32 = 2
+            public static let create: UInt32 = 0
+            public static let transfer: UInt32 = 2
         }
         
         public static func createAccountInstruction(

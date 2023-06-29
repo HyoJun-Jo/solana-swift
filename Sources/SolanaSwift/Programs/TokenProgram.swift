@@ -11,14 +11,14 @@ public extension SolanaSDK {
     struct TokenProgram {
         // MARK: - Nested type
         public struct Index {
-            static let initalizeMint: UInt8 = 0
-            static let initializeAccount: UInt8 = 1
-            static let transfer: UInt8 = 3
-            static let approve: UInt8 = 4
-            static let mintTo: UInt8 = 7
-            static let closeAccount: UInt8 = 9
-            static let transferChecked: UInt8 = 12
-            static let burnChecked: UInt8 = 15
+            public static let initalizeMint: UInt8 = 0
+            public static let initializeAccount: UInt8 = 1
+            public static let transfer: UInt8 = 3
+            public static let approve: UInt8 = 4
+            public static let mintTo: UInt8 = 7
+            public static let closeAccount: UInt8 = 9
+            public static let transferChecked: UInt8 = 12
+            public static let burnChecked: UInt8 = 15
         }
         
         // MARK: - Instructions
